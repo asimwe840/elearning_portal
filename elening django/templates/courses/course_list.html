@@ -78,14 +78,8 @@
                             </small>
                             {% endif %}
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <small class="text-muted">
-                                    <i class="bi bi-people me-1"></i>{{ course.enrolled_count }} students
-                                </small>
-                                {% if course.price > 0 %}
-                                <span class="badge bg-success">${{ course.price }}</span>
-                                {% else %}
                                 <span class="badge bg-secondary">Free</span>
-                                {% endif %}
+                                
                             </div>
                             <a href="{% url 'courses:detail' pk=course.pk %}" class="btn btn-outline-primary btn-sm">
                                 View Course

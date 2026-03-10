@@ -79,7 +79,8 @@
 
         {% if user.is_authenticated %}
         <!-- Global Persistent Sidebar -->
-        <nav id="globalSidebar" class="global-sidebar bg-white border-end d-none d-lg-flex flex-column shadow-sm flex-shrink-0">
+        <nav id="globalSidebar" class="global-sidebar bg-dark border-end d-none d-lg-flex flex-column shadow-sm flex-shrink-0"
+        style="background-color: #1c236d;">
 
             <!-- Mini profile -->
             <div class="p-3 border-bottom">
@@ -114,24 +115,20 @@
                 <a href="{% url 'users:dashboard' %}" class="sidebar-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
                     <i class="bi bi-grid me-2"></i>Dashboard
                 </a>
-                <a href="{% url 'enrollment:my_courses' %}" class="sidebar-link">
-                    <i class="bi bi-collection me-2"></i>My Training
+                <a href="{% url 'courses:list' %}" class="sidebar-link">
+                    <i class="bi bi-collection me-2"></i>Courses
                 </a>
                 <a href="{% url 'courses:list' %}" class="sidebar-link">
                     <i class="bi bi-book me-2"></i>Training Modules
                 </a>
                 <a href="{% url 'conferences:list' %}" class="sidebar-link">
-                    <i class="bi bi-camera-video me-2"></i>Live Briefings
+                    <i class="bi bi-camera-video me-2" style="color: #1c236d;"></i>Live Briefings
                 </a>
                 <a href="{% url 'messaging:inbox' %}" class="sidebar-link">
-                    <i class="bi bi-envelope me-2"></i>Messages
+                    <i class="bi bi-envelope me-2"></i>Notifications
                 </a>
-                <a href="{% url 'users:profile' pk=user.pk %}" class="sidebar-link">
-                    <i class="bi bi-person me-2"></i>My Profile
-                </a>
-                <a href="{% url 'users:edit_profile' %}" class="sidebar-link">
-                    <i class="bi bi-gear me-2"></i>Settings
-                </a>
+                
+                
 
                 {% if user.is_teacher %}
                 <div class="sidebar-section-label">Teaching</div>

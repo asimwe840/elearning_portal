@@ -60,6 +60,12 @@
         border: 1.5px solid rgba(255,255,255,.25);
         display: flex; align-items: center; justify-content: center;
         font-size: .78rem; font-weight: 700; color: #fff; flex-shrink: 0;
+        transition: background .3s, border-color .3s;
+    }
+    .auth-step-num.active {
+        background: #c8a84b;
+        border-color: #c8a84b;
+        color: #0a1f3d;
     }
     .auth-step span { color: rgba(255,255,255,.8); font-size: .84rem; line-height: 1.4; }
 
@@ -124,6 +130,111 @@
         transition: background .2s, color .2s;
     }
     .pw-hint.ok { background:#dcfce7; color:#166534; }
+
+    /* ── ROLE SELECTOR ───────────────────────────────────── */
+    .role-step {
+        animation: fadeUp .35s ease both;
+    }
+    .role-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    .role-card {
+        border: 2px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1.4rem 1.1rem;
+        cursor: pointer;
+        transition: border-color .2s, box-shadow .2s, transform .2s;
+        position: relative;
+        background: #fff;
+        text-align: center;
+        user-select: none;
+    }
+    .role-card:hover {
+        border-color: #1e5799;
+        box-shadow: 0 4px 20px rgba(13,43,78,.1);
+        transform: translateY(-2px);
+    }
+    .role-card.selected {
+        border-color: #0d2b4e;
+        box-shadow: 0 0 0 3px rgba(13,43,78,.12);
+        background: #f0f5ff;
+    }
+    .role-card .check-badge {
+        position: absolute; top: .6rem; right: .6rem;
+        width: 20px; height: 20px; border-radius: 50%;
+        background: #0d2b4e; color: #fff;
+        display: none; align-items: center; justify-content: center;
+        font-size: .6rem;
+    }
+    .role-card.selected .check-badge { display: flex; }
+
+    .role-icon {
+        width: 56px; height: 56px; border-radius: 14px;
+        margin: 0 auto .85rem;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.6rem;
+    }
+    .role-icon.student-icon { background: #eff6ff; color: #1d4ed8; }
+    .role-icon.staff-icon   { background: #fffbeb; color: #b45309; }
+
+    .role-card h6 {
+        font-weight: 700; font-size: .9rem;
+        color: #0f172a; margin-bottom: .3rem;
+    }
+    .role-card p {
+        font-size: .75rem; color: #64748b;
+        line-height: 1.5; margin: 0;
+    }
+
+    .role-badge {
+        display: inline-block;
+        font-size: .65rem; font-weight: 700;
+        letter-spacing: 1px; text-transform: uppercase;
+        padding: .2rem .55rem; border-radius: 20px;
+        margin-bottom: .6rem;
+    }
+    .badge-dpa    { background: #dbeafe; color: #1e40af; }
+    .badge-staff  { background: #fef3c7; color: #92400e; }
+
+    /* step transition */
+    .form-step { display: none; }
+    .form-step.active {
+        display: block;
+        animation: fadeUp .3s ease both;
+    }
+
+    /* materials tags */
+    .mat-tags { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .5rem; }
+    .mat-tag {
+        font-size: .67rem;
+        background: #f1f5f9; border: 1px solid #e2e8f0;
+        color: #64748b; padding: .2rem .55rem;
+        border-radius: 20px;
+    }
+
+    /* progress dots */
+    .step-dots {
+        display: flex; gap: .5rem; justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+    .step-dot {
+        width: 8px; height: 8px; border-radius: 50%;
+        background: #e2e8f0;
+        transition: background .3s, width .3s;
+    }
+    .step-dot.active {
+        background: #0d2b4e;
+        width: 24px;
+        border-radius: 4px;
+    }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
 </style>
 {% endblock %}
 
@@ -132,7 +243,7 @@
     <div class="container-fluid p-0">
         <div class="row g-0 h-100">
 
-            <!-- Brand panel -->
+            <!-- ══ Brand panel ════════════════════════════════ -->
             <div class="col-lg-4 d-none d-lg-flex">
                 <div class="auth-brand w-100">
                     <div class="auth-brand-glow"></div>
@@ -143,17 +254,20 @@
                     <p>Register your official Tanzania Police Force training account.</p>
 
                     <div class="auth-step">
-                        <div class="auth-step-num">1</div>
-                        <span>Enter your personal &amp; service details</span>
+                        <div class="auth-step-num active" id="side-step-1">1</div>
+                        <span>Choose your account type</span>
                     </div>
                     <div class="auth-step">
-                        <div class="auth-step-num">2</div>
+                        <div class="auth-step-num" id="side-step-2">2</div>
+                        <span>Enter personal &amp; service details</span>
+                    </div>
+                    <div class="auth-step">
+                        <div class="auth-step-num" id="side-step-3">3</div>
                         <span>Set a strong password</span>
                     </div>
-     
                     <div class="auth-step">
-                        <div class="auth-step-num">3</div>
-                        <span>Begin your professional development</span>
+                        <div class="auth-step-num" id="side-step-4">4</div>
+                        <span>Begin professional development</span>
                     </div>
 
                     <div class="mt-4 pt-3 w-100" style="max-width:250px;border-top:1px solid rgba(255,255,255,.1);">
@@ -165,7 +279,7 @@
                 </div>
             </div>
 
-            <!-- Form panel -->
+            <!-- ══ Form panel ═════════════════════════════════ -->
             <div class="col-12 col-lg-8">
                 <div class="auth-form-panel h-100">
                     <div style="max-width:600px;margin:0 auto;width:100%;">
@@ -178,9 +292,11 @@
                             <span class="fw-bold" style="color:#0d2b4e;font-size:1.05rem;">TPF Training Portal</span>
                         </div>
 
-                        <div class="mb-4">
-                            <h3 class="fw-bold mb-1" style="color:#0d2b4e;">Create Your TPF Account</h3>
-                            <p class="text-muted mb-0" style="font-size:.9rem;">Official Tanzania Police Force Training Portal registration</p>
+                        <!-- Progress dots -->
+                        <div class="step-dots">
+                            <div class="step-dot active" id="dot-1"></div>
+                            <div class="step-dot" id="dot-2"></div>
+                            <div class="step-dot" id="dot-3"></div>
                         </div>
 
                         {% if form.errors %}
@@ -194,136 +310,305 @@
                         </div>
                         {% endif %}
 
-                        <form method="post" action="{% url 'account_signup' %}" novalidate>
+                        <form method="post" action="{% url 'account_signup' %}" novalidate id="signupForm">
                             {% csrf_token %}
                             {% if redirect_field_value %}
                             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
                             {% endif %}
+                            <!-- Hidden role field sent to server -->
+                            <input type="hidden" name="registration_role" id="registration_role" value="">
 
-                            <!-- Personal info -->
-                            <div class="auth-section-label">Personal Information</div>
-                            <div class="row g-3 mb-1">
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="id_first_name">First name</label>
-                                    <div class="input-group auth-input-group">
-                                        <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                        <input type="text" name="first_name" id="id_first_name"
-                                            class="form-control{% if form.first_name.errors %} is-invalid{% endif %}"
-                                            placeholder="First name" value="{{ form.first_name.value|default:'' }}"
-                                            autocomplete="given-name" autofocus>
-                                        {% if form.first_name.errors %}
-                                        <div class="invalid-feedback">{{ form.first_name.errors|join:", " }}</div>
-                                        {% endif %}
+                            <!-- ══ STEP 1 — Role selection ════════════════ -->
+                            <div class="form-step active" id="step-1">
+                                <div class="mb-3">
+                                    <h3 class="fw-bold mb-1" style="color:#0d2b4e;">Choose Account Type</h3>
+                                    <p class="text-muted mb-0" style="font-size:.9rem;">Select the category that best describes you</p>
+                                </div>
+
+                                <div class="role-grid">
+
+                                    <!-- DPA Student -->
+                                    <div class="role-card" id="card-dpa" onclick="selectRole('dpa')">
+                                        <div class="check-badge"><i class="bi bi-check"></i></div>
+                                        <div class="role-icon student-icon">
+                                            <i class="bi bi-mortarboard-fill"></i>
+                                        </div>
+                                        <span class="role-badge badge-dpa">DPA Student</span>
+                                        <h6>DPA Student</h6>
+                                        <p>students registered at Dar es Salaam Police Academy. can access different materials based on their modules</p>
+                                    </div>
+
+                                    <!-- Normal Staff -->
+                                    <div class="role-card" id="card-staff" onclick="selectRole('staff')">
+                                        <div class="check-badge"><i class="bi bi-check"></i></div>
+                                        <div class="role-icon staff-icon">
+                                            <i class="bi bi-shield-fill"></i>
+                                        </div>
+                                        <span class="role-badge badge-staff">Police officer</span>
+                                        <h6>Normal Staff</h6>
+                                        <p>Police Officers who are not in school can access various resources and materials.</p>
+                                        <div class="mat-tags">
+                                            <span class="mat-tag">PGO</span>
+                                            <span class="mat-tag">Penal Code</span>
+                                            <span class="mat-tag">CPA</span>
+                                            <span class="mat-tag">Constitution</span>
+                                            <span class="mat-tag">Road Traffic</span>
+                                            <span class="mat-tag">+ more</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="id_last_name">Last name</label>
-                                    <div class="input-group auth-input-group">
-                                        <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                        <input type="text" name="last_name" id="id_last_name"
-                                            class="form-control{% if form.last_name.errors %} is-invalid{% endif %}"
-                                            placeholder="Last name" value="{{ form.last_name.value|default:'' }}"
-                                            autocomplete="family-name">
-                                        {% if form.last_name.errors %}
-                                        <div class="invalid-feedback">{{ form.last_name.errors|join:", " }}</div>
-                                        {% endif %}
+
+                                <!-- Role error hint -->
+                                <div id="role-error" class="mt-2" style="display:none;">
+                                    <small class="text-danger"><i class="bi bi-exclamation-circle me-1"></i>Please select an account type to continue.</small>
+                                </div>
+
+                                <div class="d-grid mt-4">
+                                    <button type="button" class="btn btn-auth" onclick="goToStep(2)">
+                                        Continue <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+
+                                <p class="text-center mt-3 mb-0 d-lg-none" style="font-size:.87rem;color:#64748b;">
+                                    Already have an account?
+                                    <a href="{% url 'account_login' %}" class="fw-bold text-decoration-none" style="color:#0d2b4e;">Sign in</a>
+                                </p>
+                            </div>
+
+                            <!-- ══ STEP 2 — Personal info ═════════════════ -->
+                            <div class="form-step" id="step-2">
+
+                                <!-- Role indicator pill -->
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <span id="role-pill" class="badge rounded-pill px-3 py-2" style="font-size:.78rem;"></span>
+                                    <button type="button" class="btn btn-sm btn-link text-muted p-0" onclick="goToStep(1)" style="font-size:.78rem;text-decoration:none;">
+                                        <i class="bi bi-pencil me-1"></i>Change
+                                    </button>
+                                </div>
+
+                                <div class="mb-3">
+                                    <h3 class="fw-bold mb-1" style="color:#0d2b4e;">Personal Information</h3>
+                                    <p class="text-muted mb-0" style="font-size:.9rem;">Official Tanzania Police Force Training Portal registration</p>
+                                </div>
+
+                                <div class="auth-section-label" style="margin-top:.5rem;">Personal Details</div>
+                                <div class="row g-3 mb-1">
+                                    <div class="col-sm-6">
+                                        <label class="form-label" for="id_first_name">First name</label>
+                                        <div class="input-group auth-input-group">
+                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                            <input type="text" name="first_name" id="id_first_name"
+                                                class="form-control{% if form.first_name.errors %} is-invalid{% endif %}"
+                                                placeholder="First name" value="{{ form.first_name.value|default:'' }}"
+                                                autocomplete="given-name">
+                                            {% if form.first_name.errors %}
+                                            <div class="invalid-feedback">{{ form.first_name.errors|join:", " }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label" for="id_last_name">Last name</label>
+                                        <div class="input-group auth-input-group">
+                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                            <input type="text" name="last_name" id="id_last_name"
+                                                class="form-control{% if form.last_name.errors %} is-invalid{% endif %}"
+                                                placeholder="Last name" value="{{ form.last_name.value|default:'' }}"
+                                                autocomplete="family-name">
+                                            {% if form.last_name.errors %}
+                                            <div class="invalid-feedback">{{ form.last_name.errors|join:", " }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label" for="id_username">Username</label>
+                                        <div class="input-group auth-input-group">
+                                            <span class="input-group-text"><i class="bi bi-at"></i></span>
+                                            <input type="text" name="username" id="id_username"
+                                                class="form-control{% if form.username.errors %} is-invalid{% endif %}"
+                                                placeholder="e.g. john_doe" value="{{ form.username.value|default:'' }}"
+                                                autocomplete="username">
+                                            {% if form.username.errors %}
+                                            <div class="invalid-feedback">{{ form.username.errors|join:", " }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="form-text" style="color:#94a3b8;font-size:.75rem;">Letters, digits and underscores only.</div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label" for="id_email">Email address</label>
+                                        <div class="input-group auth-input-group">
+                                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                            <input type="email" name="email" id="id_email"
+                                                class="form-control{% if form.email.errors %} is-invalid{% endif %}"
+                                                placeholder="you@example.com" value="{{ form.email.value|default:'' }}"
+                                                autocomplete="email">
+                                            {% if form.email.errors %}
+                                            <div class="invalid-feedback">{{ form.email.errors|join:", " }}</div>
+                                            {% endif %}
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="id_username">Username</label>
-                                    <div class="input-group auth-input-group">
-                                        <span class="input-group-text"><i class="bi bi-at"></i></span>
-                                        <input type="text" name="username" id="id_username"
-                                            class="form-control{% if form.username.errors %} is-invalid{% endif %}"
-                                            placeholder="e.g. john_doe" value="{{ form.username.value|default:'' }}"
-                                            autocomplete="username">
-                                        {% if form.username.errors %}
-                                        <div class="invalid-feedback">{{ form.username.errors|join:", " }}</div>
-                                        {% endif %}
+
+                                <!-- DPA-only field -->
+                                <div id="dpa-fields" style="display:none;">
+                                    <div class="auth-section-label">DPA Details</div>
+                                    <div class="row g-3 mb-1">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="id_student_number">Student Number</label>
+                                            <div class="input-group auth-input-group">
+                                                <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                                                <input type="text" name="student_number" id="id_student_number"
+                                                    class="form-control" placeholder="e.g. DPA/2024/001">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="id_intake_year">Intake Year</label>
+                                            <div class="input-group auth-input-group">
+                                                <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                                <input type="text" name="intake_year" id="id_intake_year"
+                                                    class="form-control" placeholder="e.g. 2024">
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-text" style="color:#94a3b8;font-size:.75rem;">Letters, digits and underscores only.</div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="id_email">Email address</label>
-                                    <div class="input-group auth-input-group">
-                                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                        <input type="email" name="email" id="id_email"
-                                            class="form-control{% if form.email.errors %} is-invalid{% endif %}"
-                                            placeholder="you@example.com" value="{{ form.email.value|default:'' }}"
-                                            autocomplete="email">
-                                        {% if form.email.errors %}
-                                        <div class="invalid-feedback">{{ form.email.errors|join:", " }}</div>
-                                        {% endif %}
+
+                                <!-- Staff-only field -->
+                                <div id="staff-fields" style="display:none;">
+                                    <div class="auth-section-label">Service Details</div>
+                                    <div class="row g-3 mb-1">
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="id_force_number">Force Number</label>
+                                            <div class="input-group auth-input-group">
+                                                <span class="input-group-text"><i class="bi bi-shield"></i></span>
+                                                <input type="text" name="force_number" id="id_force_number"
+                                                    class="form-control" placeholder="e.g. TPF/1234">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <label class="form-label" for="id_rank">Rank</label>
+                                            <div class="input-group auth-input-group">
+                                                <span class="input-group-text"><i class="bi bi-award"></i></span>
+                                                <select name="rank" id="id_rank" class="form-control form-select" style="border-left:none;">
+                                                    <option value="">-- Select rank --</option>
+                                                    <option>Constable</option>
+                                                    <option>Corporal</option>
+                                                    <option>Sergeant</option>
+                                                    <option>Staff Sergeant</option>
+                                                    <option>Inspector</option>
+                                                    <option>Chief Inspector</option>
+                                                    <option>Superintendent</option>
+                                                    <option>Senior Superintendent</option>
+                                                    <option>Assistant Commissioner</option>
+                                                    <option>Commissioner</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <label class="form-label" for="id_station">Station / Unit</label>
+                                            <div class="input-group auth-input-group">
+                                                <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                                <input type="text" name="station" id="id_station"
+                                                    class="form-control" placeholder="e.g. Dar es Salaam Central Police Station">
+                                            </div>
+                                        </div>
                                     </div>
+                                </div>
+
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="button" class="btn btn-outline-secondary px-4" onclick="goToStep(1)">
+                                        <i class="bi bi-arrow-left me-1"></i> Back
+                                    </button>
+                                    <button type="button" class="btn btn-auth flex-grow-1" onclick="goToStep(3)">
+                                        Continue <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
                                 </div>
                             </div>
 
-                            <!-- Security -->
-                            <div class="auth-section-label">Security</div>
-                            <div class="row g-3 mb-1">
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="id_password1">Password</label>
-                                    <div class="input-group auth-input-group">
-                                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                        <input type="password" name="password1" id="id_password1"
-                                            class="form-control{% if form.password1.errors %} is-invalid{% endif %}"
-                                            placeholder="••••••••" autocomplete="new-password">
-                                        <button type="button" class="input-group-text toggle-pw" id="togglePw1" title="Show/hide">
-                                            <i class="bi bi-eye" id="togglePw1Icon"></i>
-                                        </button>
-                                        {% if form.password1.errors %}
-                                        <div class="invalid-feedback">{{ form.password1.errors|join:", " }}</div>
-                                        {% endif %}
+                            <!-- ══ STEP 3 — Security ══════════════════════ -->
+                            <div class="form-step" id="step-3">
+
+                                <!-- Role indicator pill -->
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <span id="role-pill-2" class="badge rounded-pill px-3 py-2" style="font-size:.78rem;"></span>
+                                    <button type="button" class="btn btn-sm btn-link text-muted p-0" onclick="goToStep(1)" style="font-size:.78rem;text-decoration:none;">
+                                        <i class="bi bi-pencil me-1"></i>Change
+                                    </button>
+                                </div>
+
+                                <div class="mb-3">
+                                    <h3 class="fw-bold mb-1" style="color:#0d2b4e;">Set Your Password</h3>
+                                    <p class="text-muted mb-0" style="font-size:.9rem;">Choose a strong password to protect your account</p>
+                                </div>
+
+                                <div class="auth-section-label" style="margin-top:.5rem;">Security</div>
+                                <div class="row g-3 mb-1">
+                                    <div class="col-sm-6">
+                                        <label class="form-label" for="id_password1">Password</label>
+                                        <div class="input-group auth-input-group">
+                                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                            <input type="password" name="password1" id="id_password1"
+                                                class="form-control{% if form.password1.errors %} is-invalid{% endif %}"
+                                                placeholder="••••••••" autocomplete="new-password">
+                                            <button type="button" class="input-group-text toggle-pw" id="togglePw1" title="Show/hide">
+                                                <i class="bi bi-eye" id="togglePw1Icon"></i>
+                                            </button>
+                                            {% if form.password1.errors %}
+                                            <div class="invalid-feedback">{{ form.password1.errors|join:", " }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="pw-strength-bar" id="strengthBar"></div>
+                                        <div class="pw-hints mt-2">
+                                            <span class="pw-hint" id="hint-len">8+ chars</span>
+                                            <span class="pw-hint" id="hint-upper">Uppercase</span>
+                                            <span class="pw-hint" id="hint-num">Number</span>
+                                            <span class="pw-hint" id="hint-sym">Symbol</span>
+                                        </div>
                                     </div>
-                                    <div class="pw-strength-bar" id="strengthBar"></div>
-                                    <div class="pw-hints mt-2">
-                                        <span class="pw-hint" id="hint-len">8+ chars</span>
-                                        <span class="pw-hint" id="hint-upper">Uppercase</span>
-                                        <span class="pw-hint" id="hint-num">Number</span>
-                                        <span class="pw-hint" id="hint-sym">Symbol</span>
+                                    <div class="col-sm-6">
+                                        <label class="form-label" for="id_password2">Confirm password</label>
+                                        <div class="input-group auth-input-group">
+                                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                            <input type="password" name="password2" id="id_password2"
+                                                class="form-control{% if form.password2.errors %} is-invalid{% endif %}"
+                                                placeholder="••••••••" autocomplete="new-password">
+                                            <button type="button" class="input-group-text toggle-pw" id="togglePw2" title="Show/hide">
+                                                <i class="bi bi-eye" id="togglePw2Icon"></i>
+                                            </button>
+                                            {% if form.password2.errors %}
+                                            <div class="invalid-feedback">{{ form.password2.errors|join:", " }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div id="matchHint" class="form-text mt-1" style="font-size:.75rem;"></div>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
-                                    <label class="form-label" for="id_password2">Confirm password</label>
-                                    <div class="input-group auth-input-group">
-                                        <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                                        <input type="password" name="password2" id="id_password2"
-                                            class="form-control{% if form.password2.errors %} is-invalid{% endif %}"
-                                            placeholder="••••••••" autocomplete="new-password">
-                                        <button type="button" class="input-group-text toggle-pw" id="togglePw2" title="Show/hide">
-                                            <i class="bi bi-eye" id="togglePw2Icon"></i>
-                                        </button>
-                                        {% if form.password2.errors %}
-                                        <div class="invalid-feedback">{{ form.password2.errors|join:", " }}</div>
-                                        {% endif %}
+
+                                <!-- Terms -->
+                                <div class="mt-4 mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                        <label class="form-check-label text-muted" for="agreeTerms" style="font-size:.83rem;">
+                                            I agree to the
+                                            <a href="#" class="fw-semibold text-decoration-none" style="color:#0d2b4e;">Terms of Service</a>
+                                            and
+                                            <a href="#" class="fw-semibold text-decoration-none" style="color:#0d2b4e;">Privacy Policy</a>
+                                        </label>
                                     </div>
-                                    <div id="matchHint" class="form-text mt-1" style="font-size:.75rem;"></div>
                                 </div>
-                            </div>
 
-                            <!-- Terms -->
-                            <div class="mt-4 mb-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
-                                    <label class="form-check-label text-muted" for="agreeTerms" style="font-size:.83rem;">
-                                        I agree to the
-                                        <a href="#" class="fw-semibold text-decoration-none" style="color:#0d2b4e;">Terms of Service</a>
-                                        and
-                                        <a href="#" class="fw-semibold text-decoration-none" style="color:#0d2b4e;">Privacy Policy</a>
-                                    </label>
+                                <div class="d-flex gap-2 mb-4">
+                                    <button type="button" class="btn btn-outline-secondary px-4" onclick="goToStep(2)">
+                                        <i class="bi bi-arrow-left me-1"></i> Back
+                                    </button>
+                                    <button type="submit" class="btn btn-auth flex-grow-1">
+                                        <i class="bi bi-shield-check me-2"></i>Register Account
+                                    </button>
                                 </div>
+
+                                <p class="text-center mb-0 d-lg-none" style="font-size:.87rem;color:#64748b;">
+                                    Already have an account?
+                                    <a href="{% url 'account_login' %}" class="fw-bold text-decoration-none" style="color:#0d2b4e;">Sign in</a>
+                                </p>
                             </div>
 
-                            <div class="d-grid mb-4">
-                                <button type="submit" class="btn btn-auth">
-                                    <i class="bi bi-shield-check me-2"></i>Register Account
-                                </button>
-                            </div>
-
-                            <p class="text-center mb-0 d-lg-none" style="font-size:.87rem;color:#64748b;">
-                                Already have an account?
-                                <a href="{% url 'account_login' %}" class="fw-bold text-decoration-none" style="color:#0d2b4e;">Sign in</a>
-                            </p>
                         </form>
 
                         <div class="mt-4 pt-4" style="border-top:1px solid #f1f5f9;">
@@ -335,7 +620,7 @@
 
                     </div>
                 </div>
-            </div>
+            </div><!-- /col -->
 
         </div>
     </div>
@@ -344,11 +629,72 @@
 
 {% block extra_js %}
 <script>
-    // Toggle password visibility
+    // ── State ──────────────────────────────────────────────
+    let selectedRole = '';
+
+    // ── Role selection ─────────────────────────────────────
+    function selectRole(role) {
+        selectedRole = role;
+        document.getElementById('card-dpa').classList.toggle('selected', role === 'dpa');
+        document.getElementById('card-staff').classList.toggle('selected', role === 'staff');
+        document.getElementById('role-error').style.display = 'none';
+        document.getElementById('registration_role').value = role;
+    }
+
+    // ── Step navigation ────────────────────────────────────
+    function goToStep(n) {
+        if (n === 2 && !selectedRole) {
+            document.getElementById('role-error').style.display = 'block';
+            return;
+        }
+
+        // Update form steps
+        document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step-' + n).classList.add('active');
+
+        // Update progress dots
+        document.querySelectorAll('.step-dot').forEach((d, i) => {
+            d.classList.toggle('active', i < n);
+        });
+
+        // Update sidebar step numbers
+        [1,2,3,4].forEach(i => {
+            const el = document.getElementById('side-step-' + i);
+            if (el) el.classList.toggle('active', i <= n);
+        });
+
+        // Role pills
+        updateRolePills();
+
+        // Show/hide role-specific fields
+        if (n === 2) {
+            document.getElementById('dpa-fields').style.display  = selectedRole === 'dpa'   ? '' : 'none';
+            document.getElementById('staff-fields').style.display = selectedRole === 'staff' ? '' : 'none';
+        }
+
+        // Scroll top on mobile
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateRolePills() {
+        const label = selectedRole === 'dpa'
+            ? '<i class="bi bi-mortarboard-fill me-1"></i>DPA Student'
+            : '<i class="bi bi-shield-fill me-1"></i>Normal Staff';
+        const cls = selectedRole === 'dpa'
+            ? 'bg-primary'
+            : 'bg-warning text-dark';
+
+        ['role-pill', 'role-pill-2'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) { el.innerHTML = label; el.className = 'badge rounded-pill px-3 py-2 ' + cls; el.style.fontSize = '.78rem'; }
+        });
+    }
+
+    // ── Toggle password visibility ─────────────────────────
     function togglePw(btnId, iconId, inputId) {
         document.getElementById(btnId).addEventListener('click', () => {
             const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
+            const icon  = document.getElementById(iconId);
             const hidden = input.type === 'password';
             input.type = hidden ? 'text' : 'password';
             icon.className = hidden ? 'bi bi-eye-slash' : 'bi bi-eye';
@@ -357,9 +703,9 @@
     togglePw('togglePw1', 'togglePw1Icon', 'id_password1');
     togglePw('togglePw2', 'togglePw2Icon', 'id_password2');
 
-    // Password strength
+    // ── Password strength ──────────────────────────────────
     const pw1 = document.getElementById('id_password1');
-    const bar = document.getElementById('strengthBar');
+    const bar  = document.getElementById('strengthBar');
     const hints = {
         len:   document.getElementById('hint-len'),
         upper: document.getElementById('hint-upper'),
@@ -381,8 +727,8 @@
         bar.style.backgroundColor = v.length ? colors[score - 1] : '';
     });
 
-    // Password match
-    const pw2 = document.getElementById('id_password2');
+    // ── Password match ─────────────────────────────────────
+    const pw2       = document.getElementById('id_password2');
     const matchHint = document.getElementById('matchHint');
     pw2.addEventListener('input', () => {
         if (!pw2.value) { matchHint.textContent = ''; return; }
@@ -392,5 +738,13 @@
             matchHint.innerHTML = '<span style="color:#dc2626;"><i class="bi bi-x-circle me-1"></i>Passwords do not match</span>';
         }
     });
+
+    // ── On load: if form has errors, jump to step 2 ────────
+    
+    // Re-select role from POST data if available
+    const postedRole = '{{ request.POST.registration_role|default:"" }}';
+    if (postedRole) { selectRole(postedRole); }
+    goToStep(2);
+    
 </script>
 {% endblock %}
