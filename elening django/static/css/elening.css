@@ -1,0 +1,218 @@
+/* =============================================
+   Elening LMS - Main Stylesheet
+   ============================================= */
+
+/* ── Dark blue theme ── */
+:root {
+    --el-primary:        #0d2b4e;   /* dark navy */
+    --el-primary-hover:  #163d6e;   /* slightly lighter */
+    --el-primary-light:  #1e5799;   /* accent / active */
+    --el-primary-rgb:    13, 43, 78;
+
+    /* Override Bootstrap 5 primary */
+    --bs-primary:        #0d2b4e;
+    --bs-primary-rgb:    13, 43, 78;
+    --bs-link-color:     #1e5799;
+    --bs-link-hover-color: #0d2b4e;
+
+    --elening-sidebar-width: 230px;
+}
+
+/* Bootstrap component overrides */
+.bg-primary          { background-color: var(--el-primary) !important; }
+.text-primary        { color: var(--el-primary) !important; }
+.border-primary      { border-color: var(--el-primary) !important; }
+
+.btn-primary {
+    background-color: var(--el-primary);
+    border-color: var(--el-primary);
+    color: #fff;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: var(--el-primary-hover);
+    border-color: var(--el-primary-hover);
+    color: #fff;
+}
+
+.btn-outline-primary {
+    color: var(--el-primary);
+    border-color: var(--el-primary);
+}
+.btn-outline-primary:hover {
+    background-color: var(--el-primary);
+    border-color: var(--el-primary);
+    color: #fff;
+}
+
+.badge.bg-primary    { background-color: var(--el-primary) !important; }
+
+.list-group-item-action.active,
+.list-group-item.active {
+    background-color: var(--el-primary) !important;
+    border-color: var(--el-primary) !important;
+}
+
+a { color: var(--el-primary-light); }
+a:hover { color: var(--el-primary); }
+
+/* ── Typography ── */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f0f4f8;
+    color: #212529;
+}
+
+/* ── Navbar ── */
+.navbar {
+    z-index: 1030;
+    background-color: #ffffff !important;
+    padding: 10%;
+}
+.navbar-brand {
+    font-size: 1.3rem;
+    letter-spacing: -0.3px;
+}
+
+
+/* ── Global sidebar (dark navy) ── */
+#globalSidebar {
+    background-color: var(--el-primary) !important;
+    border-right: 1px solid rgba(255,255,255,.07) !important;
+}
+
+#globalSidebar .sidebar-avatar-initials {
+    background-color: rgba(255,255,255,.15) !important;
+    color: #fff !important;
+}
+
+#globalSidebar .border-bottom {
+    border-bottom-color: rgba(255,255,255,.1) !important;
+}
+#globalSidebar .border-top {
+    border-top-color: rgba(255,255,255,.1) !important;
+}
+
+#globalSidebar .fw-semibold { color: #e8edf3; }
+
+#globalSidebar .sidebar-link {
+    color: #b8cce0;
+}
+#globalSidebar .sidebar-link:hover {
+    background: rgba(255,255,255,.1);
+    color: #fff;
+}
+#globalSidebar .sidebar-link.active {
+    background: var(--el-primary-light);
+    color: #fff;
+}
+
+#globalSidebar .sidebar-section-label {
+    color: rgba(255,255,255,.35);
+}
+
+#globalSidebar .text-danger {
+    color: #f4a4a4 !important;
+}
+#globalSidebar .text-danger:hover {
+    color: #fff !important;
+    background: rgba(220,53,69,.35) !important;
+}
+
+#globalSidebar .sidebar-link i.text-success { color: #6ee7b7 !important; }
+#globalSidebar .sidebar-link i.text-danger  { color: #fca5a5 !important; }
+#globalSidebar .sidebar-link i.text-warning { color: #fcd34d !important; }
+
+/* ── Cards ── */
+.card {
+    transition: transform .2s ease-in-out, box-shadow .2s ease-in-out;
+}
+.card.hover-shadow:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.15) !important;
+}
+
+/* ── Course image placeholder ── */
+.course-img-placeholder {
+    background: linear-gradient(135deg, var(--el-primary) 0%, var(--el-primary-hover) 100%);
+}
+
+/* ── Quiz timer ── */
+#quiz-timer {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+#quiz-timer.warning {
+    color: #dc3545;
+    animation: pulse 1s infinite;
+}
+@keyframes pulse {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* ── Progress bar ── */
+.progress { height: 8px; border-radius: 4px; }
+
+/* ── Forum ── */
+.forum-post {
+    border-left: 4px solid var(--el-primary);
+    padding-left: 1rem;
+}
+.forum-post.nested {
+    border-left-color: #6c757d;
+    margin-left: 2rem;
+}
+
+/* ── Message bubbles ── */
+.message-bubble {
+    max-width: 70%;
+    border-radius: 1rem;
+    padding: .75rem 1rem;
+}
+.message-bubble.sent {
+    background-color: var(--el-primary);
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: .25rem;
+}
+.message-bubble.received {
+    background-color: #f8f9fa;
+    border-bottom-left-radius: .25rem;
+}
+
+/* ── Grade table ── */
+.grade-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.grade-table td { vertical-align: middle; }
+
+/* ── Breadcrumb ── */
+.breadcrumb { background: transparent; padding: 0; }
+
+/* ── Rich text ── */
+.rich-content img { max-width: 100%; height: auto; }
+.rich-content table { width: 100%; border-collapse: collapse; }
+.rich-content table td,
+.rich-content table th { border: 1px solid #dee2e6; padding: .5rem; }
+
+/* ── Utilities ── */
+.text-purple  { color: #6f42c1 !important; }
+.bg-purple    { background-color: #6f42c1 !important; }
+.cursor-pointer { cursor: pointer; }
+
+/* ── Enrollment key form ── */
+.enrolment-key-form { max-width: 400px; margin: 0 auto; }
+
+/* ── Admin stats card ── */
+.admin-stats-card { border-left: 4px solid; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .message-bubble { max-width: 90%; }
+    .course-sidebar  { position: static !important; }
+}

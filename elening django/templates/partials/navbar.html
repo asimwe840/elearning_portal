@@ -1,0 +1,95 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm py-1" style="
+    background:
+        linear-gradient(
+            to bottom right,
+            #1EB53A 0%,
+            #1EB53A 38%,
+            #FCD116 38%,
+            #FCD116 42%,
+            #000000 42%,
+            #000000 58%,
+            #FCD116 58%,
+            #FCD116 62%,
+            #00A3DD 62%,
+            #00A3DD 100%
+        ) !important;
+    border-bottom: 2px solid #0d2b4e;  /* punguza border thickness */
+    position: relative;
+">
+    <!-- Overlay -->
+    <div style="
+        position:absolute; inset:0;
+        background: rgba(235, 240, 245, 0.93);  /* kidogo opaque zaidi ili ionekane clean */
+        pointer-events:none;
+        z-index:0;
+    "></div>
+
+    <div class="container" style="position:relative; z-index:1;">
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2 fs-5" href="{% url 'home' %}">
+            <img src="{% static 'img/tpf_logo.png' %}" height="32" alt="TPF Logo" style="object-fit:contain;">
+            <span style="color:#0d2b4e;">TPF Training Portal</span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto mb-0">  <!-- mb-0 to remove extra bottom margin -->
+                <li class="nav-item">
+                    <a class="nav-link fs-6" href="{% url 'courses:list' %}">
+                        <i class="bi bi-book me-1"></i>Training Modules
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link fs-6" href="{% url 'enrollment:my_courses' %}">
+                        <i class="bi bi-collection me-1"></i>My Training
+                    </a>
+                </li>
+                <!-- ... other links ... -->
+                {% endif %}
+            </ul>
+
+            <!-- Search – smaller -->
+            <form class="d-flex me-3" action="{% url 'courses:list' %}" method="GET">
+                <div class="input-group input-group-sm">  <!-- input-group-sm -->
+                    <input class="form-control" type="search" name="q"
+                           placeholder="Search training..." value="{{ request.GET.q }}">
+                    <button class="btn btn-outline-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+
+            <!-- User menu -->
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                <!-- messages icon -->
+                <li class="nav-item">
+                    <a class="nav-link position-relative" href="{% url 'messaging:inbox' %}">
+                        <i class="bi bi-envelope fs-5"></i>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" data-bs-toggle="dropdown">
+                        {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" class="rounded-circle me-2" width="26" height="26">
+                        {% else %}
+                        <div class="bg-light text-primary rounded-circle d-flex align-items-center justify-content-center me-2"
+                             style="width:26px; height:26px; font-size:0.75rem;">
+                            {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                        </div>
+                        {% endif %}
+                        <span class="d-none d-md-inline">{{ user.get_short_name|default:user.username }}</span>
+                    </a>
+                    <!-- dropdown menu remains the same -->
+                </li>
+                {% else %}
+                <!-- sign in/up remains -->
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

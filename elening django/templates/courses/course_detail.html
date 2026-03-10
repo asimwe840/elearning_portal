@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ course.fullname }} - Elening LMS{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- Course Info -->
+        <div class="col-lg-8">
+            {% if course.category %}
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'courses:list' %}">Courses</a></li>
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'courses:category' pk=course.category.pk %}">{{ course.category.name }}</a>
+                    </li>
+                    <li class="breadcrumb-item active">{{ course.shortname }}</li>
+                </ol>
+            </nav>
+            {% endif %}
+
+            <h1 class="fw-bold mb-3 text-white">{{ course.fullname }}</h1>
+            <p class="lead text-muted">{{ course.summary|striptags|truncatewords:50 }}</p>
+
+            {% if course.teacher %}
+            <div class="d-flex align-items-center mb-4">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width:48px;height:48px">
+                    {{ course.teacher.first_name|first|upper }}{{ course.teacher.last_name|first|upper }}
+                </div>
+                <div>
+                    <div class="fw-semibold">{{ course.teacher.get_full_name }}</div>
+                    <small class="text-muted">{{ course.teacher.get_role_display }}</small>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Course Description -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">About This Course</h5>
+                    {{ course.summary|safe }}
+                </div>
+            </div>
+
+            <!-- Course Sections Preview -->
+            {% if sections %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="fw-bold mb-0">Course Content</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="accordion" id="sectionsAccordion">
+                        {% for section in sections %}
+                        <div class="accordion-item border-0 border-bottom">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                                        type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#section{{ section.pk }}">
+                                    <strong>{{ section.name|default:"Section "|add:section.section }}</strong>
+                                    <span class="ms-auto me-3 text-muted small">
+                                        {{ section.modules.count }} items
+                                    </span>
+                                </button>
+                            </h2>
+                            <div id="section{{ section.pk }}"
+                                 class="accordion-collapse collapse {% if forloop.first %}show{% endif %}">
+                                <div class="accordion-body p-0">
+                                    {% for module in section.modules.all %}
+                                    {% if module.visible %}
+                                    <div class="d-flex align-items-center p-3 border-bottom">
+                                        <i class="bi bi-{% if module.module_type == 'quiz' %}question-circle{% elif module.module_type == 'assignment' %}pencil-square{% elif module.module_type == 'forum' %}chat-dots{% elif module.module_type == 'video' %}play-circle{% else %}file-text{% endif %} text-primary me-3 fs-5"></i>
+                                        <span>{{ module.name }}</span>
+                                        <span class="ms-auto badge bg-light text-dark">{{ module.get_module_type_display }}</span>
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Enrollment Sidebar -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top:80px">
+                {% if course.image %}
+                <img src="{{ course.image.url }}" class="card-img-top rounded-top"
+                     style="height:200px;object-fit:cover" alt="{{ course.fullname }}">
+                {% endif %}
+                <div class="card-body p-4">
+                    {% if course.price > 0 %}
+                    <h3 class="fw-bold text-primary mb-3">${{ course.price }}</h3>
+                    {% else %}
+                    <h3 class="fw-bold text-success mb-3">Free</h3>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        {% if is_enrolled %}
+                        <a href="{% url 'courses:content' pk=course.pk %}" class="btn btn-success w-100 mb-3">
+                            <i class="bi bi-play-circle me-2"></i>Continue Learning
+                        </a>
+                        <a href="{% url 'enrollment:unenroll' course_pk=course.pk %}"
+                           class="btn btn-outline-danger w-100 btn-sm">
+                            Unenroll
+                        </a>
+                        {% elif course.is_full %}
+                        <button class="btn btn-secondary w-100" disabled>
+                            Course Full
+                        </button>
+                        {% else %}
+                        <a href="{% url 'enrollment:enroll' course_pk=course.pk %}"
+                           class="btn btn-primary w-100 mb-2">
+                            <i class="bi bi-plus-circle me-2"></i>Enroll Now
+                        </a>
+                        {% endif %}
+                    {% else %}
+                    <a href="{% url 'account_login' %}?next={{ request.path }}" class="btn btn-primary w-100 mb-2">
+                        Sign In to Enroll
+                    </a>
+                    <a href="{% url 'account_signup' %}" class="btn btn-outline-primary w-100">
+                        Create Free Account
+                    </a>
+                    {% endif %}
+
+                    <hr>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">
+                            <i class="bi bi-people text-primary me-2"></i>
+                            <strong>{{ enrolled_count }}</strong> students enrolled
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-calendar text-primary me-2"></i>
+                            {% if course.startdate %}Start: {{ course.startdate|date:"M d, Y" }}{% else %}Self-paced{% endif %}
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-translate text-primary me-2"></i>
+                            Language: {{ course.lang|default:"English"|upper }}
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-layout-text-window text-primary me-2"></i>
+                            Format: {{ course.get_format_display }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

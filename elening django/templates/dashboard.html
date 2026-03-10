@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard — TPF Training Portal{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-3 px-lg-4">
+
+    <h4 class="fw-bold mb-4 text-white">
+        Welcome back, {{ user.first_name|default:user.username }}!
+    </h4>
+
+    <!-- ADMIN / MODERATOR: Stats overview -->
+    {% if user.is_moderator %}
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-4">
+            <div class="card border-0 shadow-sm border-start border-primary border-3">
+                <div class="card-body py-3">
+                    <div class="text-muted small">Total Users</div>
+                    <div class="fw-bold fs-4 text-primary">{{ total_users }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="card border-0 shadow-sm border-start border-success border-3">
+                <div class="card-body py-3">
+                    <div class="text-muted small">Active Courses</div>
+                    <div class="fw-bold fs-4 text-success">{{ total_courses }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="card border-0 shadow-sm border-start border-warning border-3">
+                <div class="card-body py-3">
+                    <div class="text-muted small">Enrollments</div>
+                    <div class="fw-bold fs-4 text-warning">{{ total_enrollments }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-people me-2 text-warning"></i>Recent Users</h5>
+            <a href="{% url 'users:list' %}" class="btn btn-sm btn-outline-warning">Manage All</a>
+        </div>
+        <div class="list-group list-group-flush">
+            {% for u in recent_users %}
+            <div class="list-group-item d-flex align-items-center gap-3 py-2">
+                {% if u.avatar %}
+                <img src="{{ u.avatar.url }}" class="rounded-circle" width="36" height="36" style="object-fit:cover;">
+                {% else %}
+                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white flex-shrink-0"
+                     style="width:36px;height:36px;font-size:.8rem;font-weight:700;">
+                    {{ u.first_name|first|upper }}{{ u.last_name|first|upper }}
+                </div>
+                {% endif %}
+                <div class="flex-grow-1 min-width-0">
+                    <div class="fw-semibold text-truncate" style="font-size:.88rem;">
+                        {{ u.get_full_name|default:u.username }}
+                    </div>
+                    <div class="text-muted" style="font-size:.75rem;">{{ u.email }}</div>
+                </div>
+                <span class="badge
+                    {% if u.is_admin_role %}bg-danger
+                    {% elif u.is_moderator %}bg-warning text-dark
+                    {% elif u.is_teacher %}bg-success
+                    {% else %}bg-primary{% endif %} flex-shrink-0">
+                    {{ u.get_role_display }}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- TEACHER: Courses I Teach -->
+    {% if user.is_teacher and taught_courses %}
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-person-workspace me-2 text-success"></i>Modules I Instruct</h5>
+            <a href="{% url 'courses:create' %}" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-plus-lg me-1"></i>New Course
+            </a>
+        </div>
+        <div class="card-body p-3">
+            <div class="row g-3">
+                {% for course in taught_courses %}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card border h-100">
+                        {% if course.image %}
+                        <img src="{{ course.image.url }}" class="card-img-top" style="height:100px;object-fit:cover;">
+                        {% else %}
+                        <div class="bg-success text-white d-flex align-items-center justify-content-center" style="height:100px;">
+                            <i class="bi bi-book" style="font-size:2.5rem;"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body p-3">
+                            <h6 class="fw-bold mb-1 text-truncate">{{ course.fullname }}</h6>
+                            <small class="text-muted"><i class="bi bi-people me-1"></i>{{ course.enrolled_count }} students</small>
+                            <div class="mt-2 d-flex gap-2">
+                                <a href="{% url 'courses:content' pk=course.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+                                <a href="{% url 'courses:edit' pk=course.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ALL ROLES: My Enrolled Courses -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-0 d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 fw-bold text-white"><i class="bi bi-collection me-2 text-primary"></i>My Training</h5>
+            <a href="{% url 'enrollment:my_courses' }" class="btn btn-sm btn-outline-primary">View All</a>
+        </div>
+        <div class="card-body p-3">
+            {% if enrolled_courses %}
+            <div class="row g-3">
+                {% for enrollment in enrolled_courses %}
+                <div class="col-md-6 col-xl-4">
+                    <div class="card h-100 border">
+                        {% if enrollment.course.image %}
+                        <img src="{{ enrollment.course.image.url }}" class="card-img-top"
+                             style="height:100px;object-fit:cover;">
+                        {% else %}
+                        <div class="bg-primary text-white d-flex align-items-center justify-content-center"
+                             style="height:100px;">
+                            <i class="bi bi-book" style="font-size:2.5rem;"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body p-3">
+                            <h6 class="card-title fw-bold mb-1 text-truncate">{{ enrollment.course.fullname }}</h6>
+                            <small class="text-muted d-block mb-2">
+                                {% if enrollment.course.teacher %}<i class="bi bi-person me-1"></i>{{ enrollment.course.teacher.get_full_name }}{% endif %}
+                            </small>
+                            <a href="{% url 'courses:content' pk=enrollment.course.pk %}"
+                               class="btn btn-primary btn-sm w-100">
+                                Continue <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-4">
+                <i class="bi bi-book text-muted" style="font-size:3rem;"></i>
+                <p class="text-muted mt-2 mb-3">You are not enrolled in any training modules yet.</p>
+                <a href="{% url 'courses:list' %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-search me-1"></i>Browse Training
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+
+</div>
+{% endblock %}

@@ -1,0 +1,353 @@
+{% load static %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ══════════════════════════════════════════════════════
+     ALL STYLES SCOPED UNDER .tpf-footer — won't leak out
+     ══════════════════════════════════════════════════════ */
+
+  .tpf-footer *,
+  .tpf-footer *::before,
+  .tpf-footer *::after {
+    box-sizing: border-box;
+  }
+
+  .tpf-footer {
+    --f-navy:   #1c236d;
+    --f-navy2:  #202878;
+    --f-navy3:  #252d85;
+    --f-gold:   #c9a84c;
+    --f-gold2:  #e8c46a;
+    --f-dim:    rgba(255,255,255,.45);
+    --f-dimmer: rgba(255,255,255,.22);
+
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 110%, rgba(201,168,76,.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% -10%, rgba(30,62,120,.35) 0%, transparent 55%),
+      linear-gradient(180deg, var(--f-navy2) 0%, var(--f-navy) 100%);
+    padding: 3.5rem 0 0;
+    position: relative;
+    overflow: hidden;
+    font-family: 'Source Sans 3', sans-serif;
+    margin: 0;
+  }
+
+  /* subtle diagonal texture overlay */
+  .tpf-footer::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent, transparent 28px,
+      rgba(255,255,255,.012) 28px, rgba(255,255,255,.012) 29px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Inner container ─────────────────────────────────── */
+  .tpf-footer .tpf-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Footer grid ────────────────────────────────────── */
+  .tpf-footer .footer-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1.1fr 1.2fr 1.1fr;
+    gap: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  @media (max-width: 900px) {
+    .tpf-footer .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 540px) {
+    .tpf-footer .footer-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Column headings ────────────────────────────────── */
+  .tpf-footer .fcol h5 {
+    font-family: 'Cinzel', serif;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin-bottom: 1.1rem;
+    padding-bottom: .55rem;
+    position: relative;
+    border: none;
+    background: none;
+  }
+  .tpf-footer .fcol h5::after {
+    content: '';
+    position: absolute; left: 0; bottom: 0;
+    width: 32px; height: 2px;
+    background: linear-gradient(90deg, var(--f-gold), transparent);
+    border-radius: 2px;
+  }
+
+  /* ── Logo block ─────────────────────────────────────── */
+  .tpf-footer .footer-logo-row {
+    display: flex; align-items: center; gap: .85rem;
+    margin-bottom: 1.1rem;
+  }
+  .tpf-footer .footer-logo-shield {
+    width: 54px; height: 54px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--f-navy3), var(--f-navy));
+    border: 2px solid rgba(201,168,76,.35);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; color: var(--f-gold);
+    box-shadow: 0 0 18px rgba(201,168,76,.15);
+  }
+  .tpf-footer .footer-logo-text-main {
+    font-family: 'Cinzel', serif;
+    font-size: .98rem; font-weight: 700;
+    color: #fff;
+    line-height: 1.25;
+  }
+  .tpf-footer .footer-logo-text-sub {
+    font-size: .72rem;
+    color: #ffffff;
+    letter-spacing: .5px;
+    margin-top: 1px;
+  }
+
+  .tpf-footer .footer-tagline {
+    color: var(--f-dim);
+    font-size: .84rem;
+    line-height: 1.7;
+    margin-bottom: 1.4rem;
+  }
+
+  /* ── Social icons ───────────────────────────────────── */
+  .tpf-footer .social-row {
+    display: flex; gap: .55rem; flex-wrap: wrap;
+  }
+  .tpf-footer .social-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.55); font-size: .82rem;
+    text-decoration: none;
+    transition: all .22s ease;
+    position: relative; overflow: hidden;
+  }
+  .tpf-footer .social-btn::before {
+    content: '';
+    position: absolute; inset: 0; border-radius: 50%;
+    background: var(--f-gold);
+    transform: scale(0);
+    transition: transform .22s ease;
+  }
+  .tpf-footer .social-btn i { position: relative; z-index: 1; }
+  .tpf-footer .social-btn:hover::before { transform: scale(1); }
+  .tpf-footer .social-btn:hover {
+    color: var(--f-navy);
+    border-color: var(--f-gold);
+  }
+
+  /* ── Contact list ───────────────────────────────────── */
+  .tpf-footer .contact-list {
+    list-style: none;
+    padding: 0; margin: 0;
+  }
+  .tpf-footer .contact-list li {
+    display: flex; align-items: flex-start; gap: .6rem;
+    color: var(--f-dim); font-size: .83rem;
+    padding: .28rem 0;
+    line-height: 1.5;
+  }
+  .tpf-footer .contact-list li i {
+    color: var(--f-gold); width: 14px; flex-shrink: 0; margin-top: .18rem;
+  }
+  .tpf-footer .contact-list a {
+    color: var(--f-dim); text-decoration: none; transition: color .15s;
+  }
+  .tpf-footer .contact-list a:hover { color: var(--f-gold2); }
+
+  /* ── Link lists ─────────────────────────────────────── */
+  .tpf-footer .link-list {
+    list-style: none;
+    padding: 0; margin: 0;
+  }
+  .tpf-footer .link-list li {
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .tpf-footer .link-list li:last-child { border-bottom: none; }
+  .tpf-footer .link-list a {
+    display: flex; align-items: center; gap: .55rem;
+    color: var(--f-dim); font-size: .83rem;
+    text-decoration: none;
+    padding: .38rem 0;
+    transition: color .18s, padding-left .18s;
+  }
+  .tpf-footer .link-list a i {
+    color: var(--f-gold); font-size: .58rem;
+    transition: transform .18s;
+  }
+  .tpf-footer .link-list a:hover { color: #fff; padding-left: 5px; }
+  .tpf-footer .link-list a:hover i { transform: translateX(3px); }
+
+  /* ── Divider ────────────────────────────────────────── */
+  .tpf-footer .footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,.25) 30%, rgba(201,168,76,.25) 70%, transparent);
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Bottom bar ─────────────────────────────────────── */
+  .tpf-footer .footer-bottom {
+    background: rgba(0,0,0,.3);
+    padding: 1rem 0;
+    font-size: .78rem;
+    color: var(--f-dimmer);
+    position: relative;
+    z-index: 1;
+  }
+  .tpf-footer .footer-bottom .tpf-container {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: .5rem;
+    color: #ffffff;
+  }
+  .tpf-footer .footer-bottom a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .tpf-footer .footer-bottom a:hover { color: var(--f-gold); }
+  .tpf-footer .footer-bottom .sep { margin: 0 .6rem; opacity: .3; }
+
+  /* ── Fade-in animation on load ──────────────────────── */
+  .tpf-footer .fcol {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: tpfFadeUp .5s ease forwards;
+  }
+  .tpf-footer .fcol:nth-child(1) { animation-delay: .05s; }
+  .tpf-footer .fcol:nth-child(2) { animation-delay: .15s; }
+  .tpf-footer .fcol:nth-child(3) { animation-delay: .25s; }
+  .tpf-footer .fcol:nth-child(4) { animation-delay: .35s; }
+
+  @keyframes tpfFadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<!-- ════════════ MAIN FOOTER ════════════ -->
+<footer class="tpf-footer">
+  <div class="tpf-container">
+    <div class="footer-grid">
+
+      <!-- COL 1 — About -->
+      <div class="fcol">
+        <div class="footer-logo-row">
+          <div class="footer-logo-shield">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div>
+            <div class="footer-logo-text-main">TPF Training<br>Portal</div>
+            <div class="footer-logo-text-sub">Dodoma · Tanzania</div>
+          </div>
+        </div>
+
+        <p class="footer-tagline">
+          Dedicated to excellence in law enforcement education and training,
+          developing professional police officers to serve and protect the
+          United Republic of Tanzania.
+        </p>
+
+        <div class="social-row">
+          <a href="https://www.facebook.com/100082484637622" target="_blank" rel="noopener" class="social-btn" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://x.com/tanpol" target="_blank" rel="noopener" class="social-btn" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="http://www.youtube.com/@usalamatv" target="_blank" rel="noopener" class="social-btn" aria-label="YouTube">
+            <i class="fab fa-youtube"></i>
+          </a>
+          <a href="https://www.instagram.com/polisi.tanzania" target="_blank" rel="noopener" class="social-btn" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- COL 2 — Contact -->
+      <div class="fcol">
+        <h5>Contact Us</h5>
+        <ul class="contact-list">
+          <li><i class="fas fa-map-marker-alt"></i>
+            <span>TPF Training portal,<br>P.O. Box 2503,<br>Dodoma,<br>Tanzania.</span>
+          </li>
+          <li><i class="fas fa-phone-alt"></i> (+255) 022 285 0067</li>
+          <li><i class="fas fa-envelope"></i>
+            <a href="mailto:info@tpf.go.tz">info@tpf.go.tz</a>
+          </li>
+          <li><i class="fas fa-globe"></i>
+            <a href="https://www.tpf.go.tz" target="_blank" rel="noopener">www.tpf.go.tz</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- COL 3 — Quick Links -->
+      <div class="fcol">
+        <h5>Quick Links</h5>
+        <ul class="link-list">
+          <li><a href="https://www.mha.go.tz" target="_blank" rel="noopener"><i class="fas fa-chevron-right"></i>Wizara ya Mambo ya Ndani</a></li>
+          <li><a href="https://polisi.go.tz" target="_blank" rel="noopener"><i class="fas fa-chevron-right"></i>Tanzania Police Force</a></li>
+          <li><a href="https://www.prisons.go.tz" target="_blank" rel="noopener"><i class="fas fa-chevron-right"></i>Jeshi la Magereza Tanzania</a></li>
+          <li><a href="https://www.immigration.go.tz" target="_blank" rel="noopener"><i class="fas fa-chevron-right"></i>Uhamiaji Tanzania</a></li>
+          <li><a href="https://www.nida.go.tz" target="_blank" rel="noopener"><i class="fas fa-chevron-right"></i>NIDA</a></li>
+          <li><a href="https://www.zimamoto.go.tz" target="_blank" rel="noopener"><i class="fas fa-chevron-right"></i>Zimamoto Tanzania</a></li>
+        </ul>
+      </div>
+
+      <!-- COL 4 — Police Colleges -->
+      <div class="fcol">
+        <h5>Police Colleges</h5>
+        <ul class="link-list">
+          <li><a href="https://tpsmoshi.ac.tz" target="_blank" rel="noopener"><i class="fas fa-chevron-right"></i>Tanzania Police School</a></li>
+          <li><a href="https://www.nacte.go.tz" target="_blank" rel="noopener"><i class="fas fa-chevron-right"></i>Marine Police College</a></li>
+          <li><a href="https://zpc.ac.tz/" target="_blank" rel="noopener"><i class="fas fa-chevron-right"></i>Zanzibar Police College</a></li>
+        </ul>
+
+        <h5 style="margin-top:1.6rem;">Support</h5>
+        <ul class="link-list">
+          <li><a href="#"><i class="fas fa-chevron-right"></i>Help &amp; Documentation</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i>Contact Support</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i>Privacy Policy</a></li>
+        </ul>
+      </div>
+
+    </div><!-- /footer-grid -->
+  </div><!-- /tpf-container -->
+
+  <div class="footer-divider"></div>
+
+  <!-- Bottom bar -->
+  <div class="footer-bottom">
+    <div class="tpf-container">
+      <span>&copy; <span id="tpf-yr"></span> TPF Training portal. All rights reserved.</span>
+      <span>
+        <a href="#">Privacy Policy</a>
+        <span class="sep">|</span>
+        <a href="#">Terms of Use</a>
+        <span class="sep">|</span>
+        <a href="#">Contact Support</a>
+      </span>
+    </div>
+  </div>
+
+</footer>
+
+<script>document.getElementById('tpf-yr').textContent = new Date().getFullYear();</script>
